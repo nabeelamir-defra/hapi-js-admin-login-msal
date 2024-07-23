@@ -1,15 +1,18 @@
 
-import msal from "@azure/msal-node";
+import { PublicClientApplication } from "@azure/msal-node";
+import dotenv from "dotenv";
 
+dotenv.config();
+/** @type {import('@azure/msal-node').Configuration */
 const msalConfig = {
   auth: {
-    clientId: process.env.CLIENT_ID,
-    authority: `https://login.microsoftonline.com/${process.env.TENANT_INFO}`,
+    clientId: process.env.MSAL_CLIENT_ID,
+    authority: `https://login.microsoftonline.com/${process.env.MSAL_TENANT_INFO}`,
   },
 };
 
 
-const pca = new msal.PublicClientApplication(msalConfig);
+const pca = new PublicClientApplication(msalConfig);
 
 // TODO use cache once working
 const msalTokenCache = pca.getTokenCache();
@@ -31,7 +34,7 @@ export default [
         const password = request.query.password;
 
         const usernamePasswordRequest = {
-          scopes: ["user.read"],
+          scopes: [process.env.MSAL_SCOPE],
           username,
           password,
         };
